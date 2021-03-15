@@ -7,11 +7,11 @@ function MVars() as Void
 
   ' Asset dir
   if isHD() <> True
-     Screen is SD
-     m.varsDir = "pkg:/assets/sd"
+     ' Screen is SD
+     m.varsDir = "pkg:/images/sd"
   else
-     Screen is HD
-     m.varsDir = "pkg:/assets/hd"
+     ' Screen is HD
+     m.varsDir = "pkg:/images/hd"
   end if
 
   ' Safe Dims
@@ -20,6 +20,7 @@ function MVars() as Void
 
   ' Custom Screensaver Objects
   app = CreateObject("roAppManager")
+  m.textureManager = InitTextureManager()
   m.di = CreateObject("roDeviceInfo")
   m.timer = CreateObject("roTimespan")
   m.deviceScreensaverTimeout = (app.GetScreenSaverTimeout() * 60) - 20
@@ -30,9 +31,9 @@ function MVars() as Void
   m.currDeviceScreensaverCounter = m.di.TimeSinceLastKeypress()
   m.currScreensaverCounter = 0
   m.addedTime = False
-  m.timeMoved = True
-  m.dtX = m.titleSafeDims.xOffset + Rnd(250)
-  m.dtY = m.titleSafeDims.yOffset + Rnd(150)
   m.rndDTWidth = 0
   m.ampm = False
+  m.fontRegistry = CreateObject("roFontRegistry")
+  ' Darker Grotesque
+  m.fontRegistry.Register("pkg:/fonts/DarkerGrotesque-Regular.ttf")
 end function

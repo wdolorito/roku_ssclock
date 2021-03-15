@@ -1,5 +1,5 @@
 #!/bin/bash
-DEBUG=0
+DEBUG=1
 PRESERVE_TEMP=0
 TARGET="roku_screensaver.zip"
 BRSALL="source/roku_screensaver.brs" # Monolithic source file to be made
@@ -29,7 +29,7 @@ while true; do
 done
 
 # Filter list of files only to those needing built
-FILES=$( find ./ ) # List all files
+FILES=$( find . ) # List all files
 FILES=$( echo "$FILES" | grep -v "$0" ) # Filter out this script
 FILES=$( echo "$FILES" | grep -v '\.git' ) # Filter out Git-related files
 FILES=$( echo "$FILES" | grep -v '\.hg' ) # Filter out Mercurial-related files
@@ -41,7 +41,6 @@ FILES=$( echo "$FILES" | grep -v '\.settings' ) # Filter out Eclipse settings fo
 FILES=$( echo "$FILES" | grep -v 'resources' ) # Filter out resources folder
 FILES=$( echo "$FILES" | grep -v "$TARGET" ) # Filter out target file
 FILES=$( echo "$FILES" | grep -v '^\./$' ) # Filter out current directory listing
-FILES=$( echo "$FILES" | grep -v 'layouts' ) # Filter out Gimp layout files
 FILES=$( echo "$FILES" | grep -v 'submission' ) # Filter out Roku channel store submission files
 
 if [ $DEBUG = 1 ]; then # Don't concatenate all files if debugging
@@ -58,7 +57,7 @@ if [ -e "$BRSALL" ]; then
   rm -f "$BRSALL"
 fi
 BRS=$( echo "$FILES" | grep ".brs$" )
-cat $BRS | tr -d "\t" | sed -r 's|^\s+||g' | sed -r 's|\s+$||g' | grep -v "^'" | grep -v "^REM " | grep -v "^REM$" | grep -v "^$" > "$BRSALL"
+cat $BRS | sed -E 's|^\s+||g' | sed -E 's|\s+$||g' |grep -v "^'" | grep -v "^REM " | grep -v "^REM$" | grep -v "^$" > "$BRSALL"
 
 # Filter out source files
 FILESNOSRC=$( echo "$FILES" | grep -v ".brs$" | grep -v "source" )

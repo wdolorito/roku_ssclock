@@ -2,28 +2,22 @@ function RunScreensaver(fromSystem = True) as Void
   MVars()
   screen = m.screen
   port = screen.GetMessagePort()
-  logo = GetTextureRegion(m.varsDir + "/cov_logo.png", m.textureManager)
   screenColor = &hFFFFFFFF
   width = m.titleSafeDims.screenWidth
   height = m.titleSafeDims.screenHeight
   xOffset = m.titleSafeDims.xOffset
   yOffset = m.titleSafeDims.yOffset
 
-  minX = 0 - logo.GetWidth()
-  minY = 0 - logo.GetHeight()
-
-  fontRegistry = CreateObject("roFontRegistry")
-  fontRegistry.Register("pkg:/assets/fonts/Lato/Lato-Regular.ttf")
-
   if isHD() <> True
     ' Screen is SD
-    fontSize = 25
+    fontSize = 45
   else
     ' Screen is HD
-    fontSize = 40
+    fontSize = 100
   end if
 
-  textFont = fontRegistry.GetFont("Lato", fontSize, False, False)
+  textFont = m.fontRegistry.GetFont("Darker Grotesque", fontSize, False, False)
+  oneLineHeight = textFont.GetOneLineHeight()
   textColor = &h333333FF
 
   x = Rnd(width)
@@ -36,6 +30,18 @@ function RunScreensaver(fromSystem = True) as Void
   dy = Rnd(10)
 
   while True
+    localTime = GetLocalTime(m.ampm)
+    date = localTime.date
+    time = localTime.time
+
+    wsWidth = m.titleSafeDims.wsWidth
+
+    dateWidth = textFont.GetOneLineWidth(date, wsWidth)
+    timeWidth = textFont.GetOneLineWidth(time, wsWidth)
+
+    minX = 0 - dateWidth
+    minY = 0 - oneLineHeight - oneLineHeight
+
     if xUp
       x = x + dx
     else
@@ -68,60 +74,18 @@ function RunScreensaver(fromSystem = True) as Void
       dy = Rnd(10)
     end if
 
-    localTime = GetLocalTime(m.ampm)
-    date = localTime.date
-    time = localTime.time
-
-    wsWidth = m.titleSafeDims.wsWidth
-
-    dateWidth = textFont.GetOneLineWidth(date, wsWidth)
-    timeWidth = textFont.GetOneLineWidth(time, wsWidth)
-
     m.rndDTWidth = wsWidth - dateWidth
     timeLeftStart = CenterHText(time, textFont, dateWidth)
-    timeTopStart = textFont.GetOneLineHeight()
-
-    if m.currScreensaverCounter mod 30 = 0 and m.timeMoved = False
-      print "time moved "; m.currScreensaverCounter
-      m.dtX = xOffset + Rnd(m.rndDTWidth)
-      m.dtY = yOffset + Rnd(m.rndDTWidth)
-      m.timeMoved = True
-    end if
+    timeTopStart = oneLineHeight
 
     if m.currScreensaverCounter mod 30 = 1
       m.timeMoved = False
     end if
 
-    dtX = m.dtX
-    dtY = m.dtY
-
     screen.Clear(screenColor)
 
-    screen.DrawText(date, dtX, dtY, textColor, textFont)
-    screen.DrawText(time, dtX + timeLeftStart, dtY + timeTopStart, textColor, textFont)
-
-    screen.DrawScaledObject(x, y, 1, 1, logo)
-
-    backNotChecked = True
-    while backNotChecked
-      msg = port.GetMessage()
-      if msg = Invalid
-        backNotChecked = False
-      else
-        if Type(msg) = "roUniversalControlEvent"
-          button = msg.GetInt()
-          down = button <> m.screensaverKeyIntDown
-          up = button <> m.screensaverKeyIntUp
-          print "button pressed"; button
-          print "down "; down
-          print "up "; up
-          print "down and up "; down and up
-          if down and up
-            return
-          end if
-        end if
-      end if
-    end while
+    screen.DrawText(date, x, y, textColor, textFont)
+    screen.DrawText(time, x + timeLeftStart, y + timeTopStart, textColor, textFont)
 
     if Type(fromSystem) <> "roAssociativeArray"
       UpdateScreensaver(True)
@@ -143,7 +107,6 @@ function UpdateScreensaver(inSS, fromSystem = False) as Void
   end if
 
   if m.currScreensaverCounter mod 10 = 0 and m.addedTime = False
-    print "mark"; m.currScreenSaverCounter ; " cdsc" ; m.currDeviceScreensaverCounter
     m.currDeviceScreensaverCounter = m.currDeviceScreensaverCounter + 10
     m.addedTime = True
   end if
@@ -160,7 +123,6 @@ function UpdateScreensaver(inSS, fromSystem = False) as Void
   end if
 
   if m.currScreensaverCounter >= m.screensaverTimeout
-    print "screensaver on"
     m.currScreensaverCounter = 0
     m.timer.Mark()
 

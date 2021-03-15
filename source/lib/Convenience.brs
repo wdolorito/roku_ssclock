@@ -41,8 +41,6 @@ function GetTextureRegion(localpath, textureManager) as Dynamic
         if bitmap <> invalid
           texture = CreateObject("roRegion", bitmap, 0, 0, bitmap.GetWidth(), bitmap.GetHeight())
           texture.SetScaleMode(scale)
-        else
-          print localpath; " was invalid"
         end if
 
         exit while
@@ -292,6 +290,4 @@ function SendECP(keycode) as Void
       exit while
     end if
   end while
-
-  print "sent keycode "; url
 end function
