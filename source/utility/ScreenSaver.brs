@@ -2,7 +2,7 @@ function RunScreensaver(fromSystem = True) as Void
   MVars()
   screen = m.screen
   port = screen.GetMessagePort()
-  screenColor = &hFFFFFFFF
+  screenColor = &h00000000
   width = m.titleSafeDims.screenWidth
   height = m.titleSafeDims.screenHeight
   xOffset = m.titleSafeDims.xOffset
@@ -18,16 +18,16 @@ function RunScreensaver(fromSystem = True) as Void
 
   textFont = m.fontRegistry.GetFont("Darker Grotesque", fontSize, False, False)
   oneLineHeight = textFont.GetOneLineHeight()
-  textColor = &h333333FF
+  textColor = &hFFFFFFFF
 
   x = Rnd(width)
   y = Rnd(height)
 
+  dx = Rnd(3)
+  dy = Rnd(3)
+
   xUp = True
   yUp = True
-
-  dx = Rnd(10)
-  dy = Rnd(10)
 
   while True
     localTime = GetLocalTime(m.ampm)
