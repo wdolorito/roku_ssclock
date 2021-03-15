@@ -27,19 +27,6 @@ function CenterHText(text, font, maxWidth = 0) as Object
   return leftStart
 end function
 
-function CenterVText(text, font, maxHeight = 0) as Object
-  topStart = 0
-
-  if maxHeight = 0
-    maxHeight = m.titleSafeDims.screenHeight
-  end if
-
-  textHeight = font.GetOneLineHeight()
-  topStart = (maxHeight - textHeight) * 0.5
-
-  return topStart
-end function
-
 function GetTitleSafeDims() as Object
   titleSafeDims = {}
 
