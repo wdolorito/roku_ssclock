@@ -18,7 +18,6 @@ Function isnonemptystr(obj)
   return ((obj <> invalid) AND (GetInterface(obj, "ifString") <> invalid) AND (Len(obj) > 0))
 End Function
 
-
 '******************************************************
 'isnullorempty
 '
@@ -28,7 +27,6 @@ End Function
 Function isnullorempty(obj)
   return ((obj = invalid) OR (GetInterface(obj, "ifString") = invalid) OR (Len(obj) = 0))
 End Function
-
 
 '******************************************************
 'strtobool
@@ -78,7 +76,6 @@ Function strTrim(str As String) As String
   return st.Trim()
 End Function
 
-
 '******************************************************
 'Tokenize a string. Return roList of strings
 '******************************************************
@@ -87,7 +84,6 @@ Function strTokenize(str As String, delim As String) As Object
   st.SetString(str)
   return st.Tokenize(delim)
 End Function
-
 
 '******************************************************
 'Replace substrings in a string. Return new string

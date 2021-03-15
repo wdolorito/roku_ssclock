@@ -20,7 +20,6 @@ function MVars() as Void
 
   ' Custom Screensaver Objects
   app = CreateObject("roAppManager")
-  m.textureManager = InitTextureManager()
   m.di = CreateObject("roDeviceInfo")
   m.timer = CreateObject("roTimespan")
   m.deviceScreensaverTimeout = (app.GetScreenSaverTimeout() * 60) - 20
