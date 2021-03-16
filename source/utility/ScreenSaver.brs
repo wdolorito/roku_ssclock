@@ -2,7 +2,7 @@ function RunScreensaver(fromSystem = True) as Void
   MVars()
   screen = m.screen
   port = screen.GetMessagePort()
-  screenColor = &h00000000
+  screenColor = &h000000FF
   width = m.titleSafeDims.screenWidth
   height = m.titleSafeDims.screenHeight
   xOffset = m.titleSafeDims.xOffset
@@ -16,9 +16,61 @@ function RunScreensaver(fromSystem = True) as Void
     fontSize = 100
   end if
 
-  textFont = m.fontRegistry.GetFont("Darker Grotesque", fontSize, False, False)
+  font = RegRead("font")
+  if font = "Thin"
+    ' Darker Grotesque
+    m.fontRegistry.Register("pkg:/fonts/DarkerGrotesque-Regular.ttf")
+    textFont = m.fontRegistry.GetFont("Darker Grotesque", fontSize, False, False)
+  end if
+
+  if font = "Regular"
+    ' Muar Regular
+    m.fontRegistry.Register("pkg:/fonts/Muar-Regular.ttf")
+    textFont = m.fontRegistry.GetFont("Muar", fontSize, False, False)
+  end if
+
+  if font = "Stencil"
+    ' Muar Stencil
+    m.fontRegistry.Register("pkg:/fonts/Muar-Stencil.ttf")
+    textFont = m.fontRegistry.GetFont("Muar", fontSize, False, False)
+  end if
+
+  if font = "Script"
+    ' Signatura Monoline Script
+    m.fontRegistry.Register("pkg:/fonts/Signatura Monoline.ttf")
+    textFont = m.fontRegistry.GetFont("Signatura Monoline Script", fontSize, False, False)
+  end if
+
   oneLineHeight = textFont.GetOneLineHeight()
-  textColor = &hFFFFFFFF
+
+  color = RegRead("color")
+  if color = "Red"
+    textColor = &hFF0000FF
+  end if
+
+  if color = "Green"
+    textColor = &h00FF00FF
+  end if
+
+  if color = "Blue"
+    textColor = &h0000FFFF
+  end if
+
+  if color = "Cyan"
+    textColor = &h00FFFFFF
+  end if
+
+  if color = "Yellow"
+    textColor = &hFFFF00FF
+  end if
+
+  if color = "Magenta"
+    textColor = &hFF00FFFF
+  end if
+
+  if color = "White"
+    textColor = &hFFFFFFFF
+  end if
 
   x = Rnd(width)
   y = Rnd(height)

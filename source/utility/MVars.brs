@@ -3,16 +3,9 @@ function MVars() as Void
     return
   end if
 
-  m.screen = CreateScreen()
+  SetDefaults()
 
-  ' Asset dir
-  if isHD() <> True
-     ' Screen is SD
-     m.varsDir = "pkg:/images/sd"
-  else
-     ' Screen is HD
-     m.varsDir = "pkg:/images/hd"
-  end if
+  m.screen = CreateScreen()
 
   ' Safe Dims
   m.actionSafeDims = GetActionSafeDims()
@@ -31,8 +24,18 @@ function MVars() as Void
   m.currScreensaverCounter = 0
   m.addedTime = False
   m.rndDTWidth = 0
-  m.ampm = False
+  m.ampm = strtobool(RegRead("ampm"))
   m.fontRegistry = CreateObject("roFontRegistry")
-  ' Darker Grotesque
-  m.fontRegistry.Register("pkg:/fonts/DarkerGrotesque-Regular.ttf")
+end function
+
+function SetDefaults() as Void
+  RegDelete("font")
+  RegDelete("ampm")
+  RegDelete("font")
+  RegDelete("haveSettings")
+
+  RegWrite("font", "Thin")
+  RegWrite("ampm", "False")
+  RegWrite("color", "White")
+  RegWrite("haveSettings", "True")
 end function
