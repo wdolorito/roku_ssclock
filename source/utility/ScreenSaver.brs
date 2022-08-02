@@ -1,12 +1,9 @@
 function RunScreensaver(fromSystem = True) as Void
   MVars()
   screen = m.screen
-  port = screen.GetMessagePort()
-  screenColor = &h000000FF
+  screenColor = m["Black"]
   width = m.titleSafeDims.screenWidth
   height = m.titleSafeDims.screenHeight
-  xOffset = m.titleSafeDims.xOffset
-  yOffset = m.titleSafeDims.yOffset
 
   if isHD() <> True
     ' Screen is SD
@@ -16,61 +13,21 @@ function RunScreensaver(fromSystem = True) as Void
     fontSize = 100
   end if
 
-  font = RegRead("font")
-  if font = "Thin"
-    ' Darker Grotesque
-    m.fontRegistry.Register("pkg:/fonts/DarkerGrotesque-Regular.ttf")
+  if m.font = "Thin"
     textFont = m.fontRegistry.GetFont("Darker Grotesque", fontSize, False, False)
   end if
 
-  if font = "Regular"
-    ' Muar Regular
-    m.fontRegistry.Register("pkg:/fonts/Muar-Regular.ttf")
+  if m.font = "Regular"
     textFont = m.fontRegistry.GetFont("Muar", fontSize, False, False)
   end if
 
-  if font = "Stencil"
-    ' Muar Stencil
-    m.fontRegistry.Register("pkg:/fonts/Muar-Stencil.ttf")
-    textFont = m.fontRegistry.GetFont("Muar", fontSize, False, False)
-  end if
-
-  if font = "Script"
-    ' Signatura Monoline Script
-    m.fontRegistry.Register("pkg:/fonts/Signatura Monoline.ttf")
+  if m.font = "Script"
     textFont = m.fontRegistry.GetFont("Signatura Monoline Script", fontSize, False, False)
   end if
 
   oneLineHeight = textFont.GetOneLineHeight()
 
-  color = RegRead("color")
-  if color = "Red"
-    textColor = &hFF0000FF
-  end if
-
-  if color = "Green"
-    textColor = &h00FF00FF
-  end if
-
-  if color = "Blue"
-    textColor = &h0000FFFF
-  end if
-
-  if color = "Cyan"
-    textColor = &h00FFFFFF
-  end if
-
-  if color = "Yellow"
-    textColor = &hFFFF00FF
-  end if
-
-  if color = "Magenta"
-    textColor = &hFF00FFFF
-  end if
-
-  if color = "White"
-    textColor = &hFFFFFFFF
-  end if
+  textColor = m[RegRead("color")]
 
   x = Rnd(width)
   y = Rnd(height)
@@ -89,7 +46,6 @@ function RunScreensaver(fromSystem = True) as Void
     wsWidth = m.titleSafeDims.wsWidth
 
     dateWidth = textFont.GetOneLineWidth(date, wsWidth)
-    timeWidth = textFont.GetOneLineWidth(time, wsWidth)
 
     minX = 0 - dateWidth
     minY = 0 - oneLineHeight - oneLineHeight

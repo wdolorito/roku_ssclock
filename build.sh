@@ -1,5 +1,5 @@
 #!/bin/bash
-DEBUG=1
+DEBUG=0
 PRESERVE_TEMP=0
 TARGET="roku_screensaver.zip"
 BRSALL="source/roku_screensaver.brs" # Monolithic source file to be made

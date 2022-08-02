@@ -1,3 +1,3 @@
 function Main() as Void
-    RunScreensaver()
+    RunScreenSaverSettings()
 end function
