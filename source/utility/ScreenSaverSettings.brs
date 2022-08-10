@@ -362,6 +362,10 @@ function DrawTimeOption(params, fontParams, timeParams) as Void
 end function
 
 function DrawMasks(params, maskParams) as Void
+  settings = GetSettings()
+  font = settings.font
+  color = settings.color
+  ampm = settings.ampm
   highLight = params.highLight
 
   thinBoxX = maskParams.thinBoxX
@@ -412,19 +416,41 @@ function DrawMasks(params, maskParams) as Void
   timeBoxH = maskParams.timeBoxH
 
   ' font option masks
-  m.screen.DrawRect(thinBoxX, thinBoxY, thinBoxW, thinBoxH, highLight)
-  m.screen.DrawRect(regularBoxX, regularBoxY, regularBoxW, regularBoxH, highLight)
+  if font = "Thin"
+    m.screen.DrawRect(thinBoxX, thinBoxY, thinBoxW, thinBoxH, highLight)
+  end if
+  if font = "Regular"
+    m.screen.DrawRect(regularBoxX, regularBoxY, regularBoxW, regularBoxH, highLight)
+  end if
+    if font = "Script"
   m.screen.DrawRect(scriptBoxX, scriptBoxY, scriptBoxW, scriptBoxH, highLight)
+  end if
 
   ' color option masks
-  m.screen.DrawRect(redBoxX, redBoxY, redBoxW, redBoxH, highLight)
-  m.screen.DrawRect(greenBoxX, greenBoxY, greenBoxW, greenBoxH, highLight)
-  m.screen.DrawRect(blueBoxX, blueBoxY, blueBoxW, blueBoxH, highLight)
-  m.screen.DrawRect(cyanBoxX, cyanBoxY, cyanBoxW, cyanBoxH, highLight)
-  m.screen.DrawRect(yellowBoxX, yellowBoxY, yellowBoxW, yellowBoxH, highLight)
-  m.screen.DrawRect(magentaBoxX, magentaBoxY, magentaBoxW, magentaBoxH, highLight)
-  m.screen.DrawRect(whiteBoxX, whiteBoxY, whiteBoxW, whiteBoxH, highLight)
+  if color = "Red"
+    m.screen.DrawRect(redBoxX, redBoxY, redBoxW, redBoxH, highLight)
+  end if
+  if color = "Green"
+    m.screen.DrawRect(greenBoxX, greenBoxY, greenBoxW, greenBoxH, highLight)
+  end if
+  if color = "Blue"
+    m.screen.DrawRect(blueBoxX, blueBoxY, blueBoxW, blueBoxH, highLight)
+  end if
+  if color = "Cyan"
+    m.screen.DrawRect(cyanBoxX, cyanBoxY, cyanBoxW, cyanBoxH, highLight)
+  end if
+  if color = "Yellow"
+    m.screen.DrawRect(yellowBoxX, yellowBoxY, yellowBoxW, yellowBoxH, highLight)
+  end if
+  if color = "Magenta"
+    m.screen.DrawRect(magentaBoxX, magentaBoxY, magentaBoxW, magentaBoxH, highLight)
+  end if
+  if color = "White"
+    m.screen.DrawRect(whiteBoxX, whiteBoxY, whiteBoxW, whiteBoxH, highLight)
+  end if
 
   ' time option mask
-  m.screen.DrawRect(timeBoxX, timeBoxY, timeBoxW, timeBoxH, highLight)
+  if ampm = True
+    m.screen.DrawRect(timeBoxX, timeBoxY, timeBoxW, timeBoxH, highLight)
+  end if
 end function
