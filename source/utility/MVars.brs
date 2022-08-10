@@ -49,6 +49,7 @@ function MVars() as Void
   m.Magenta = &hFF00FFFF
   m.Black = &h000000FF
   m.White = &hFFFFFFFF
+  m.highLight = &h9999997F
 end function
 
 function SetDefaults() as Void
