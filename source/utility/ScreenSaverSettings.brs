@@ -29,15 +29,67 @@ function RunScreenSaverSettings() as Void
   sssParams.AddReplace("xOffset", m.actionSafeDims.xOffset)
   sssParams.AddReplace("yOffset", m.actionSafeDims.yOffset)
   sssParams.AddReplace("wsWidth", m.actionSafeDims.wsWidth)
+  sssParams.AddReplace("posX", 0)
+  sssParams.AddReplace("posY", 0)
+  sssParams.AddReplace("navMap", InitNavMap())
+
 
   fontParams = CalcFontOptions(sssParams)
   colorParams = CalcColorOptions(sssParams, fontParams)
   timeParams = CalcTimeOptions(sssParams, fontParams, colorParams)
   maskParams = CalcMasks(sssParams, fontParams, colorParams, timeParams)
 
+  screen = m.screen
+  port = screen.GetMessagePort()
+
+  backDown = False
+  upDown = False
+  downDown = False
+  leftDown = False
+  rightDown = False
+  selectDown = False
+
   while True ' main settings loop
     ' clear screen
-    m.screen.Clear(sssParams.black)
+    screen.Clear(sssParams.black)
+
+    msg = port.GetMessage()
+
+    if Type(msg) = "roUniversalControlEvent" then
+        button = msg.GetInt()
+
+        if button = 0 then                                ' Back
+          backDown = True
+        else if button = 100 and backDown = True then     ' Back <up>
+          backDown = False
+          return
+        else if button = 2 then                           ' Up
+          upDown = True
+        else if button = 102 and upDown = True then       ' Up <up>
+          upDown = False
+          sssParams = MoveYPos(sssParams, False)
+        else if button = 3 then                           ' Down
+          downDown = True
+        else if button = 103 and downDown = True then     ' Down <up>
+          downDown = False
+          sssParams = MoveYPos(sssParams)
+        else if button = 4 then                           ' Left
+          leftDown = True
+        else if button = 104 and leftDown = True then     ' Left <up>
+          leftDown = False
+          sssParams = MoveXPos(sssParams, False)
+        else if button = 5 then                           ' Right
+          rightDown = True
+        else if button = 105 and rightDown = True then    ' Right <up>
+          rightDown = False
+          sssParams = MoveXPos(sssParams)
+        else if button = 6 then                           ' Select
+          selectDown = True
+        else if button = 106 and selectDown = True then   ' Select <up>
+          selectDown = False
+          StoreSettings(sssParams)
+        end if
+    end if
 
     DrawFontOptions(sssParams, fontParams)
     DrawColorOptions(sssParams, fontParams, colorParams)
@@ -45,8 +97,66 @@ function RunScreenSaverSettings() as Void
     DrawMasks(sssParams, maskParams)
 
     ' display buffer
-    m.screen.SwapBuffers()
+    screen.SwapBuffers()
   end while ' end main settings loop
+end function
+
+function InitNavMap() as Object
+  Dim map[8, 2]
+
+  map[0, 0] = "Thin"
+  map[0, 1] = "Thin"
+  map[1, 0] = "Regular"
+  map[1, 1] = "Regular"
+  map[2, 0] = "Script"
+  map[2, 1] = "Script"
+  map[3, 0] = "Red"
+  map[3, 1] = "Yellow"
+  map[4, 0] = "Green"
+  map[4, 1] = "Magenta"
+  map[5, 0] = "Blue"
+  map[5, 1] = "White"
+  map[6, 0] = "Cyan"
+  map[6, 1] = "Cyan"
+  map[7, 0] = "toggle"
+  map[7, 1] = "toggle"
+
+  return map
+end function
+
+function MoveXPos(params, dir = True) as Object
+  posX = params.posX
+
+  if dir = True
+    if posX = 0
+      posX = 1
+    end if
+  else
+    if posX = 1
+      posX = 0
+    end if
+  end if
+
+  params.AddReplace("posX", posX)
+
+  return params
+end function
+
+function MoveYPos(params, dir = True) as Object
+  posY = params.posY
+
+  if dir = True
+    if posY < 8
+      posY = posY + 1
+    end if
+  else
+    if posY > 0
+      posY = posY - 1
+    end if
+  end if
+
+  params.AddReplace("posY", posY)
+  return params
 end function
 
 function CalcFontOptions(params) as Object
@@ -283,7 +393,7 @@ function CalcMasks(params, fontParams, colorParams, timeParams) as Object
 end function
 
 function DrawFontOptions(params, fontParams) as Void
-  fontColor = m[m.color]
+  fontColor = m["White"]
   font = fontParams.font
   fontPrompt = fontParams.fontPrompt
   xOffset = params.xOffset
@@ -415,42 +525,47 @@ function DrawMasks(params, maskParams) as Void
   timeBoxW = maskParams.timeBoxW
   timeBoxH = maskParams.timeBoxH
 
+  navMap = params.navMap
+  posY = params.posY
+  posX = params.posX
+  selection = navMap[posY, posX]
+
   ' font option masks
-  if font = "Thin"
+  if font = "Thin" or selection = "Thin"
     m.screen.DrawRect(thinBoxX, thinBoxY, thinBoxW, thinBoxH, highLight)
   end if
-  if font = "Regular"
+  if font = "Regular" or selection = "Regular"
     m.screen.DrawRect(regularBoxX, regularBoxY, regularBoxW, regularBoxH, highLight)
   end if
-    if font = "Script"
+    if font = "Script" or selection = "Script"
   m.screen.DrawRect(scriptBoxX, scriptBoxY, scriptBoxW, scriptBoxH, highLight)
   end if
 
   ' color option masks
-  if color = "Red"
+  if color = "Red" or selection = "Red"
     m.screen.DrawRect(redBoxX, redBoxY, redBoxW, redBoxH, highLight)
   end if
-  if color = "Green"
+  if color = "Green" or selection = "Green"
     m.screen.DrawRect(greenBoxX, greenBoxY, greenBoxW, greenBoxH, highLight)
   end if
-  if color = "Blue"
+  if color = "Blue" or selection = "Blue"
     m.screen.DrawRect(blueBoxX, blueBoxY, blueBoxW, blueBoxH, highLight)
   end if
-  if color = "Cyan"
+  if color = "Cyan" or selection = "Cyan"
     m.screen.DrawRect(cyanBoxX, cyanBoxY, cyanBoxW, cyanBoxH, highLight)
   end if
-  if color = "Yellow"
+  if color = "Yellow" or selection = "Yellow"
     m.screen.DrawRect(yellowBoxX, yellowBoxY, yellowBoxW, yellowBoxH, highLight)
   end if
-  if color = "Magenta"
+  if color = "Magenta" or selection = "Magenta"
     m.screen.DrawRect(magentaBoxX, magentaBoxY, magentaBoxW, magentaBoxH, highLight)
   end if
-  if color = "White"
+  if color = "White" or selection = "White"
     m.screen.DrawRect(whiteBoxX, whiteBoxY, whiteBoxW, whiteBoxH, highLight)
   end if
 
   ' time option mask
-  if ampm = True
+  if ampm = False or selection = "toggle"
     m.screen.DrawRect(timeBoxX, timeBoxY, timeBoxW, timeBoxH, highLight)
   end if
 end function

@@ -1,3 +1,4 @@
-function Main() as Void
-    RunScreenSaverSettings()
-end function
+' function Main() as Void
+'   RunScreenSaver()
+'   RunScreenSaverSettings()
+' end function

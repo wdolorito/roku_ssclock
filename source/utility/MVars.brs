@@ -78,3 +78,27 @@ function GetSettings() as Object
 
   return settings
 end function
+
+function StoreSettings(settings) as Void
+  navMap = settings.navMap
+  posY = settings.posY
+  posX = settings.posX
+  selection = navMap[posY, posX]
+
+  if posY >= 0 and posY <= 2
+    RegWrite("font", selection)
+  end if
+
+  if posY >= 3 and posY <= 6
+    RegWrite("color", selection)
+  end if
+
+  if selection = "toggle"
+    curr = strtobool(RegRead("ampm"))
+    if curr = True
+      RegWrite("ampm", "False")
+    else
+      RegWrite("ampm", "True")
+    end if
+  end if
+end function
